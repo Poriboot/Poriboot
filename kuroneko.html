@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>kuro_neko</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Lobster+Two:ital,wght@0,400;0,700;1,400;1,700&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Sriracha&display=swap');
+
+        html, body {
+            height: 100%;
+            margin: 0;
+        }
+
+        body {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            text-align: center;
+            padding: 1rem;
+            box-sizing: border-box;
+            background: linear-gradient(180deg, #46fdf9 0%, #7df9ff 100%);
+            font-family: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
+        }
+
+        .center {
+            width: 100%;
+            max-width: 980px;
+            padding: 1.25rem;
+            box-sizing: border-box;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 0.75rem;
+        }
+        
+        .thai {
+            font-family: 'Sriracha', cursive;
+        }
+
+        h1, h2 {
+            font-family: 'Lobster Two', cursive;
+            margin: 0;
+        }
+
+        h1 {
+            font-size: clamp(1.7rem, 6.2vw, 3.2rem);
+        }
+
+        h2 {
+            font-size: clamp(1.1rem, 3.8vw, 1.8rem);
+        }
+
+        .button-row {
+            display: flex;
+            gap: 0.8rem;
+            justify-content: center;
+            flex-wrap: wrap;
+            margin-top: 0.25rem;
+        }
+
+        button {
+            padding: 0.7rem 1.2rem;
+            border: none;
+            border-radius: 14px;
+            color: #fff;
+            font-weight: 700;
+            font-size: 1rem;
+            cursor: pointer;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.12);
+            transition: transform 0.2s ease, opacity 0.2s ease, box-shadow 0.2s ease;
+            min-width: 110px;
+            width: clamp(110px, 22vw, 220px);
+            font-family: 'Lobster Two', cursive;
+        }
+
+        .yes {
+            background: linear-gradient(135deg, #00C853 0%, #76FF03 100%);
+        }
+
+        .no {
+            background: linear-gradient(135deg, #E53935 0%, #FF7043 100%);
+        }
+
+        button:focus {
+            outline: 3px solid rgba(0,0,0,0.08);
+        }
+
+        button:hover {
+            filter: brightness(1.03);
+        }
+
+        .no.hidden {
+            display: none;
+        }
+
+        .popup {
+            position: fixed;
+            inset: 0;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            background: rgba(0, 0, 0, 0.35);
+            z-index: 1000;
+            padding: 1rem;
+        }
+
+        .popup.show {
+            display: flex;
+        }
+
+        .popup-card {
+            background: linear-gradient(135deg, #fff7b2 0%, #ffd6e0 100%);
+            color: #7a1e5c;
+            padding: 1.8rem 2rem;
+            border-radius: 24px;
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.25);
+            text-align: center;
+            max-width: 360px;
+            animation: popIn 0.35s ease;
+        }
+
+        .popup-card h3 {
+            margin: 0 0 0.7rem;
+            font-size: 1.7rem;
+        }
+
+        .popup-card p {
+            margin: 0;
+            font-size: 1rem;
+            line-height: 1.5;
+        }
+
+        .particle {
+            position: fixed;
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            pointer-events: none;
+            animation: fall 1.2s ease-out forwards;
+            z-index: 999;
+        }
+
+        @keyframes popIn {
+            from { transform: scale(0.7); opacity: 0; }
+            to { transform: scale(1); opacity: 1; }
+        }
+
+        @keyframes fall {
+            0% { transform: translate(0, 0) scale(1); opacity: 1; }
+            100% { transform: translate(var(--tx), var(--ty)) scale(0.2); opacity: 0; }
+        }
+    </style>
+</head>
+<body>
+    <div class="center">
+        <h1>Can U be my Valantine &lt;3 ?</h1>
+        <h2>kuro_nekko</h2>
+        <div class="button-row">
+            <button class="no">no</button>
+            <button class="yes">yes</button>
+        </div>
+    </div>
+
+    <div class="popup" id="partyPopup">
+        <div class="popup-card">
+            <h3 class="thai">เย้</h3>
+            <p class="thai">รักนะครับ คุณแฟน💖</p>
+        </div>
+    </div>
+
+    <script>
+        (function () {
+            const noBtn = document.querySelector('.no');
+            const yesBtn = document.querySelector('.yes');
+            const popup = document.getElementById('partyPopup');
+            if (!noBtn || !yesBtn || !popup) return;
+
+            let clicks = 0;
+            const maxClicks = 5;
+
+            noBtn.addEventListener('click', function (e) {
+                e.preventDefault();
+                clicks += 1;
+
+                if (clicks <= maxClicks) {
+                    const yesScale = 1 + clicks * 0.2;
+                    const noScale = Math.max(0.3, 1 - clicks * 0.12);
+
+                    yesBtn.style.transform = `scale(${yesScale})`;
+                    noBtn.style.transform = `scale(${noScale})`;
+                    noBtn.style.opacity = (1 - clicks * 0.12).toFixed(2);
+
+                    if (clicks === maxClicks) {
+                        noBtn.classList.add('hidden');
+                    }
+                }
+            });
+
+            yesBtn.addEventListener('click', function (e) {
+                e.preventDefault();
+                popup.classList.add('show');
+                createParticles();
+                setTimeout(() => popup.classList.remove('show'), 2200);
+            });
+
+            function createParticles() {
+                const colors = ['#ff4d6d', '#ffb703', '#7b61ff', '#00c853', '#ff8fab'];
+                for (let i = 0; i < 30; i++) {
+                    const particle = document.createElement('span');
+                    particle.className = 'particle';
+                    particle.style.left = `${yesBtn.getBoundingClientRect().left + yesBtn.offsetWidth / 2}px`;
+                    particle.style.top = `${yesBtn.getBoundingClientRect().top + yesBtn.offsetHeight / 2}px`;
+                    particle.style.background = colors[i % colors.length];
+                    const tx = (Math.random() - 0.5) * 220;
+                    const ty = (Math.random() - 0.5) * 220;
+                    particle.style.setProperty('--tx', `${tx}px`);
+                    particle.style.setProperty('--ty', `${ty}px`);
+                    document.body.appendChild(particle);
+                    setTimeout(() => particle.remove(), 1300);
+                }
+            }
+        })();
+    </script>
+</body>
+</html>
